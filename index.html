@@ -16,7 +16,7 @@
   <body>
     <main class="page-shell">
       <header class="context-block">
-        <p class="beat-label">01 · Context</p>
+        <p class="page-kicker">NYC collision injury patterns</p>
         <h1>When are NYC crashes most dangerous?</h1>
         <p class="context-copy">
           If you’re driving in New York, knowing when crashes are most likely
@@ -40,7 +40,6 @@
 
       <div class="setup-grid">
         <section class="setup-item" aria-labelledby="dataHeading">
-          <p class="beat-label">02 · Data</p>
           <h2 id="dataHeading">A recent snapshot</h2>
           <p>
             I looked at <strong id="narrativeRecordCount">—</strong> recent NYC
@@ -50,7 +49,6 @@
         </section>
 
         <section class="setup-item" aria-labelledby="analysisHeading">
-          <p class="beat-label">03 · Analysis</p>
           <h2 id="analysisHeading">Two ways to read the day</h2>
           <p>
             I grouped crashes by hour, counted total injuries, and compared
@@ -114,14 +112,20 @@
         </p>
       </section>
 
-      <section class="insight-block" aria-labelledby="insightHeadline">
-        <p class="beat-label beat-label--light">04 · Insight</p>
-        <h2 id="insightHeadline">Loading the latest comparison…</h2>
-        <p class="insight-intro">
-          In this dataset, the hour with the largest injury total and the hour
-          with the largest number of injuries relative to crashes are not the
-          same. This describes an association in this sample; it does not tell
-          us what caused the difference.
+      <aside class="auto-insight" aria-labelledby="insightHeadline">
+        <div class="auto-insight-heading">
+          <div>
+            <p class="auto-insight-label">Data Story</p>
+            <h2 id="insightHeadline">Loading the latest comparison…</h2>
+          </div>
+          <p class="demo-badge">Verified analysis · No AI API</p>
+        </div>
+
+        <p class="auto-insight-context">
+          When planning for safer streets, it helps to look beyond the busiest
+          time of day. Using <strong id="autoInsightRecordCount">—</strong>
+          recent collision records, the app grouped crashes by hour and
+          compared injury totals with injuries relative to crash count.
         </p>
 
         <div class="summary-grid" aria-label="Leading hours">
@@ -144,21 +148,14 @@
           </article>
         </div>
 
-        <p id="leaderUpdate" class="leader-update" aria-live="polite"></p>
-      </section>
+        <p class="auto-insight-takeaway">
+          <strong>Why it matters:</strong> Traffic safety teams can use both
+          measures when deciding when to focus safety efforts. This dataset
+          shows an association, not what caused the difference.
+        </p>
 
-      <section class="so-what" aria-labelledby="soWhatHeading">
-        <p class="beat-label">05 · So what?</p>
-        <div>
-          <h2 id="soWhatHeading">Safety planning needs both sides of the story.</h2>
-          <p>
-            City planners and traffic safety teams should not focus only on
-            when the most injuries happen. They should also consider when
-            crashes produce more injuries per 100 crashes when deciding where
-            and when to focus safety efforts.
-          </p>
-        </div>
-      </section>
+        <p id="leaderUpdate" class="leader-update" aria-live="polite"></p>
+      </aside>
 
       <aside class="methodology" aria-labelledby="methodologyTitle">
         <h2 id="methodologyTitle">A quick note about the rate</h2>

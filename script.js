@@ -269,6 +269,8 @@ async function loadDashboard() {
     previousLeaders = leaders;
     document.getElementById("narrativeRecordCount").textContent =
       records.length.toLocaleString();
+    document.getElementById("autoInsightRecordCount").textContent =
+      records.length.toLocaleString();
     recordCountElement.textContent = `Records returned: ${records.length.toLocaleString()}`;
     lastUpdatedElement.textContent = `Last fetched: ${new Date().toLocaleString()}`;
     statusElement.textContent = "Live collision data loaded successfully.";
