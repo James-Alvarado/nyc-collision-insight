@@ -30,7 +30,7 @@ Only hours with at least 20 crashes can qualify as the highest injury-rate hour.
 
 ## Visualization
 
-The page tells one short story in five beats: context, data, analysis, insight, and why the result matters. A grouped bar chart uses Chart.js from a CDN as the visual evidence. Blue bars show total injuries, and red bars show injuries per 100 crashes. Each measurement has its own labeled y-axis because the two values use different units. Hover over the bars to see exact values.
+The page tells one short story in five beats: context, data, analysis, insight, and why the result matters. Two aligned Chart.js bar charts provide the visual evidence without mixing different units on one scale. The first shows total injuries, and the second shows injuries per 100 crashes. Both keep all 24 hours visible, use a darker bar to identify the calculated leader, and provide exact values on hover.
 
 The **Refresh Live Data** button makes a new API request, recalculates every hour, redraws the chart, updates the metric cards and timestamp, and reports whether either leading hour changed.
 

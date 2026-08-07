@@ -9,7 +9,7 @@ const lastUpdatedElement = document.getElementById("lastUpdated");
 const refreshButton = document.getElementById("refreshButton");
 const leaderUpdateElement = document.getElementById("leaderUpdate");
 
-let collisionChart = null;
+let collisionCharts = [];
 let previousLeaders = null;
 
 async function fetchCollisionData() {
@@ -84,6 +84,10 @@ function updateSummary(leaders) {
     "insightHeadline"
   ).textContent = `${totalHour} had the most injuries. ${rateHour} had the highest injury rate.`;
 
+  document.getElementById(
+    "chartCallout"
+  ).textContent = `${totalHour} leads in total injuries, while ${rateHour} leads in injuries per 100 crashes. The two measures answer different questions.`;
+
   document.getElementById("totalInjuriesHour").textContent = totalHour;
   document.getElementById(
     "totalInjuriesDetail"
@@ -128,102 +132,123 @@ function reportLeaderChange(newLeaders) {
   )} changed.`;
 }
 
-function renderChart(hourlyData) {
-  const chartCanvas = document.getElementById("injuryChart");
+function createChartOptions(hourlyData, leaderHour, metric) {
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false,
+      },
+      tooltip: {
+        callbacks: {
+          label(context) {
+            const hourData = hourlyData[context.dataIndex];
 
-  // Destroying the old chart prevents duplicate charts after a refresh.
-  if (collisionChart !== null) {
-    collisionChart.destroy();
-  }
+            if (metric === "rate") {
+              return `Injuries per 100 crashes: ${hourData.injuryRate.toFixed(2)}`;
+            }
 
-  collisionChart = new Chart(chartCanvas, {
+            return `Total injuries: ${hourData.totalInjuries}`;
+          },
+          afterLabel(context) {
+            return `Crash count: ${hourlyData[context.dataIndex].crashCount}`;
+          },
+          footer(context) {
+            const hourData = hourlyData[context[0].dataIndex];
+
+            if (
+              metric === "rate" &&
+              hourData.crashCount < MINIMUM_CRASHES_FOR_RATE
+            ) {
+              return "Not eligible for the rate leader: fewer than 20 crashes";
+            }
+
+            return "";
+          },
+        },
+      },
+    },
+    scales: {
+      x: {
+        ticks: {
+          maxRotation: 0,
+          minRotation: 0,
+          callback(value, index) {
+            const showLabel = index % 3 === 0 || index === leaderHour;
+            return showLabel ? this.getLabelForValue(value) : "";
+          },
+        },
+        grid: {
+          display: false,
+        },
+      },
+      y: {
+        beginAtZero: true,
+        title: {
+          display: true,
+          text:
+            metric === "rate"
+              ? "Injuries per 100 crashes"
+              : "Total injuries",
+        },
+        ticks: {
+          precision: metric === "rate" ? 1 : 0,
+        },
+      },
+    },
+  };
+}
+
+function renderChart(hourlyData, leaders) {
+  // Destroying both old charts prevents duplicates after a refresh.
+  collisionCharts.forEach((chart) => chart.destroy());
+
+  const hourLabels = hourlyData.map((hourData) => formatHour(hourData.hour));
+  const totalLeaderHour = leaders.highestTotal.hour;
+  const rateLeaderHour = leaders.highestRate.hour;
+
+  const totalChart = new Chart(document.getElementById("totalInjuriesChart"), {
     type: "bar",
     data: {
-      labels: hourlyData.map((hourData) => formatHour(hourData.hour)),
+      labels: hourLabels,
       datasets: [
         {
           label: "Total injuries",
           data: hourlyData.map((hourData) => hourData.totalInjuries),
-          backgroundColor: "rgba(35, 100, 170, 0.82)",
-          borderColor: "#2364aa",
-          borderWidth: 1,
+          backgroundColor: hourlyData.map((hourData) =>
+            hourData.hour === totalLeaderHour ? "#2364aa" : "#c8d9ec"
+          ),
           borderRadius: 4,
-          yAxisID: "injuriesAxis",
-        },
-        {
-          label: "Injuries per 100 crashes",
-          data: hourlyData.map((hourData) => hourData.injuryRate),
-          backgroundColor: "rgba(217, 74, 69, 0.78)",
-          borderColor: "#d94a45",
-          borderWidth: 1,
-          borderRadius: 4,
-          yAxisID: "rateAxis",
         },
       ],
     },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      interaction: {
-        mode: "index",
-        intersect: false,
-      },
-      plugins: {
-        tooltip: {
-          callbacks: {
-            label(context) {
-              const value = context.parsed.y;
-              const formattedValue =
-                context.dataset.yAxisID === "rateAxis"
-                  ? value.toFixed(2)
-                  : value;
-              return `${context.dataset.label}: ${formattedValue}`;
-            },
-          },
-        },
-      },
-      scales: {
-        x: {
-          ticks: {
-            maxRotation: 0,
-            minRotation: 0,
-            callback(value, index) {
-              return index % 3 === 0 ? this.getLabelForValue(value) : "";
-            },
-          },
-          grid: {
-            display: false,
-          },
-        },
-        injuriesAxis: {
-          type: "linear",
-          position: "left",
-          beginAtZero: true,
-          title: {
-            display: true,
-            text: "Total injuries",
-            color: "#2364aa",
-          },
-          ticks: {
-            precision: 0,
-          },
-        },
-        rateAxis: {
-          type: "linear",
-          position: "right",
-          beginAtZero: true,
-          title: {
-            display: true,
-            text: "Injuries per 100 crashes",
-            color: "#d94a45",
-          },
-          grid: {
-            drawOnChartArea: false,
-          },
-        },
-      },
-    },
+    options: createChartOptions(hourlyData, totalLeaderHour, "total"),
   });
+
+  const rateChart = new Chart(document.getElementById("injuryRateChart"), {
+    type: "bar",
+    data: {
+      labels: hourLabels,
+      datasets: [
+        {
+          label: "Injuries per 100 crashes",
+          data: hourlyData.map((hourData) => hourData.injuryRate),
+          backgroundColor: hourlyData.map((hourData) => {
+            if (hourData.crashCount < MINIMUM_CRASHES_FOR_RATE) {
+              return "#d7d7d7";
+            }
+
+            return hourData.hour === rateLeaderHour ? "#d94a45" : "#efc3c1";
+          }),
+          borderRadius: 4,
+        },
+      ],
+    },
+    options: createChartOptions(hourlyData, rateLeaderHour, "rate"),
+  });
+
+  collisionCharts = [totalChart, rateChart];
 }
 
 async function loadDashboard() {
@@ -238,7 +263,7 @@ async function loadDashboard() {
     const leaders = findLeaders(hourlyData);
 
     updateSummary(leaders);
-    renderChart(hourlyData);
+    renderChart(hourlyData, leaders);
     reportLeaderChange(leaders);
 
     previousLeaders = leaders;

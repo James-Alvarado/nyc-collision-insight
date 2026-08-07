@@ -64,28 +64,64 @@
         <div class="chart-heading">
           <div>
             <p class="chart-overline">All 24 hours</p>
-            <h2 id="chartTitle">The daily pattern</h2>
+            <h2 id="chartTitle">Two measures, shown separately</h2>
           </div>
           <p class="chart-hint">
-            Blue shows total injuries. Red shows injuries per 100 crashes.
-            Hover for exact values.
+            Every hour remains visible. The darker bar marks the leader in
+            each chart. Hover over any bar for exact values.
           </p>
         </div>
 
-        <div class="chart-container">
-          <canvas
-            id="injuryChart"
-            aria-label="Grouped bar chart comparing total injuries and injuries per 100 crashes for every hour"
-            role="img"
-          ></canvas>
+        <div class="small-multiples">
+          <figure class="mini-chart mini-chart--total">
+            <figcaption>
+              <span class="chart-key chart-key--total" aria-hidden="true"></span>
+              <strong>Total injuries</strong>
+              <span>How many people were injured in that hour?</span>
+            </figcaption>
+            <div class="chart-container">
+              <canvas
+                id="totalInjuriesChart"
+                aria-label="Bar chart showing total injuries for every hour"
+                role="img"
+              ></canvas>
+            </div>
+          </figure>
+
+          <figure class="mini-chart mini-chart--rate">
+            <figcaption>
+              <span class="chart-key chart-key--rate" aria-hidden="true"></span>
+              <strong>Injuries per 100 crashes</strong>
+              <span>Injuries relative to the number of crashes in that hour.</span>
+            </figcaption>
+            <div class="chart-container">
+              <canvas
+                id="injuryRateChart"
+                aria-label="Bar chart showing injuries per 100 crashes for every hour"
+                role="img"
+              ></canvas>
+            </div>
+          </figure>
         </div>
+
+        <p id="chartCallout" class="chart-callout">
+          Loading the comparison between the two leaders…
+        </p>
+
+        <p class="eligibility-note">
+          Rate leader rule: an hour needs at least 20 crashes. Hours below that
+          minimum remain visible in gray but cannot be selected as the leader.
+        </p>
       </section>
 
       <section class="insight-block" aria-labelledby="insightHeadline">
         <p class="beat-label beat-label--light">04 · Insight</p>
         <h2 id="insightHeadline">Loading the latest comparison…</h2>
         <p class="insight-intro">
-          The busiest injury hour and the highest-rate hour are not the same.
+          In this dataset, the hour with the largest injury total and the hour
+          with the largest number of injuries relative to crashes are not the
+          same. This describes an association in this sample; it does not tell
+          us what caused the difference.
         </p>
 
         <div class="summary-grid" aria-label="Leading hours">

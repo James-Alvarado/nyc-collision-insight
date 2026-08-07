@@ -188,9 +188,70 @@ button:disabled {
   text-align: right;
 }
 
+.small-multiples {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.mini-chart {
+  min-width: 0;
+  margin: 0;
+  padding: 22px 18px 14px;
+  border: 1px solid var(--line);
+  background: #fbfbf9;
+}
+
+.mini-chart figcaption {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 9px;
+  margin-bottom: 12px;
+}
+
+.mini-chart figcaption strong {
+  line-height: 1.2;
+}
+
+.mini-chart figcaption span:last-child {
+  grid-column: 2;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.chart-key {
+  width: 12px;
+  height: 12px;
+  margin-top: 3px;
+  border-radius: 3px;
+}
+
+.chart-key--total {
+  background: var(--blue);
+}
+
+.chart-key--rate {
+  background: var(--red);
+}
+
 .chart-container {
   position: relative;
-  height: 390px;
+  height: 310px;
+}
+
+.chart-callout {
+  margin: 22px 0 0;
+  padding: 18px 20px;
+  border-left: 5px solid var(--red);
+  background: #fff3f2;
+  font-weight: 800;
+}
+
+.eligibility-note {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 0.82rem;
 }
 
 .insight-block {
@@ -343,6 +404,10 @@ button:disabled {
     grid-template-columns: 1fr;
   }
 
+  .small-multiples {
+    grid-template-columns: 1fr;
+  }
+
   .setup-item + .setup-item {
     border-top: 1px solid var(--line);
     border-left: 0;
@@ -353,7 +418,7 @@ button:disabled {
   }
 
   .chart-container {
-    height: 340px;
+    height: 300px;
   }
 
   .summary-grid {
