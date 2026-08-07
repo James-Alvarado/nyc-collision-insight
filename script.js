@@ -77,16 +77,19 @@ function formatHour(hour) {
 }
 
 function updateSummary(leaders) {
-  document.getElementById("totalInjuriesHour").textContent = formatHour(
-    leaders.highestTotal.hour
-  );
+  const totalHour = formatHour(leaders.highestTotal.hour);
+  const rateHour = formatHour(leaders.highestRate.hour);
+
+  document.getElementById(
+    "insightHeadline"
+  ).textContent = `${totalHour} had the most injuries. ${rateHour} had the highest injury rate.`;
+
+  document.getElementById("totalInjuriesHour").textContent = totalHour;
   document.getElementById(
     "totalInjuriesDetail"
   ).textContent = `${leaders.highestTotal.totalInjuries} people injured across ${leaders.highestTotal.crashCount} crashes`;
 
-  document.getElementById("injuryRateHour").textContent = formatHour(
-    leaders.highestRate.hour
-  );
+  document.getElementById("injuryRateHour").textContent = rateHour;
   document.getElementById(
     "injuryRateDetail"
   ).textContent = `${leaders.highestRate.injuryRate.toFixed(2)} injuries per 100 crashes`;
@@ -150,8 +153,8 @@ function renderChart(hourlyData) {
         {
           label: "Injuries per 100 crashes",
           data: hourlyData.map((hourData) => hourData.injuryRate),
-          backgroundColor: "rgba(217, 119, 6, 0.78)",
-          borderColor: "#d97706",
+          backgroundColor: "rgba(217, 74, 69, 0.78)",
+          borderColor: "#d94a45",
           borderWidth: 1,
           borderRadius: 4,
           yAxisID: "rateAxis",
@@ -181,13 +184,15 @@ function renderChart(hourlyData) {
       },
       scales: {
         x: {
-          title: {
-            display: true,
-            text: "Crash hour",
-          },
           ticks: {
-            maxRotation: 45,
-            minRotation: 45,
+            maxRotation: 0,
+            minRotation: 0,
+            callback(value, index) {
+              return index % 3 === 0 ? this.getLabelForValue(value) : "";
+            },
+          },
+          grid: {
+            display: false,
           },
         },
         injuriesAxis: {
@@ -210,7 +215,7 @@ function renderChart(hourlyData) {
           title: {
             display: true,
             text: "Injuries per 100 crashes",
-            color: "#d97706",
+            color: "#d94a45",
           },
           grid: {
             drawOnChartArea: false,
@@ -237,6 +242,8 @@ async function loadDashboard() {
     reportLeaderChange(leaders);
 
     previousLeaders = leaders;
+    document.getElementById("narrativeRecordCount").textContent =
+      records.length.toLocaleString();
     recordCountElement.textContent = `Records returned: ${records.length.toLocaleString()}`;
     lastUpdatedElement.textContent = `Last fetched: ${new Date().toLocaleString()}`;
     statusElement.textContent = "Live collision data loaded successfully.";

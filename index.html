@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta
       name="description"
-      content="Explore how total injuries and injury rates vary by crash hour in recent NYC collision data."
+      content="See how total injuries and injuries per 100 crashes change by hour in recent NYC collision data."
     >
-    <title>NYC Collision Injury Insight</title>
+    <title>When NYC Crashes Cause Injuries</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
     <script src="script.js" defer></script>
@@ -15,12 +15,13 @@
 
   <body>
     <main class="page-shell">
-      <header class="hero">
-        <p class="eyebrow">NYC Open Data Explorer</p>
-        <h1>When are collision injuries most severe?</h1>
-        <p class="intro">
-          Compare the hour with the most total injuries to the hour with the
-          highest number of injuries per 100 crashes.
+      <header class="context-block">
+        <p class="beat-label">01 · Context</p>
+        <h1>When are NYC crashes most dangerous?</h1>
+        <p class="context-copy">
+          If you’re driving in New York, knowing when crashes are most likely
+          to cause injuries can help you think differently about when the roads
+          are actually the most dangerous.
         </p>
       </header>
 
@@ -37,51 +38,98 @@
         <button id="refreshButton" type="button">Refresh Live Data</button>
       </section>
 
-      <section class="summary-grid" aria-label="Leading hours">
-        <article class="metric-card metric-card--total">
-          <p class="metric-label">Highest total injuries</p>
-          <p id="totalInjuriesHour" class="metric-value">—</p>
-          <p id="totalInjuriesDetail" class="metric-detail">
-            Waiting for live data
+      <div class="setup-grid">
+        <section class="setup-item" aria-labelledby="dataHeading">
+          <p class="beat-label">02 · Data</p>
+          <h2 id="dataHeading">A recent snapshot</h2>
+          <p>
+            I looked at <strong id="narrativeRecordCount">—</strong> recent NYC
+            collision records to compare when injuries happened and how the
+            number of injuries changed across the day.
           </p>
-        </article>
+        </section>
 
-        <article class="metric-card metric-card--rate">
-          <p class="metric-label">Highest injury rate</p>
-          <p id="injuryRateHour" class="metric-value">—</p>
-          <p id="injuryRateDetail" class="metric-detail">
-            Waiting for live data
+        <section class="setup-item" aria-labelledby="analysisHeading">
+          <p class="beat-label">03 · Analysis</p>
+          <h2 id="analysisHeading">Two ways to read the day</h2>
+          <p>
+            I grouped crashes by hour, counted total injuries, and compared
+            that count with injuries per 100 crashes to see whether they told
+            the same story.
           </p>
-        </article>
-      </section>
-
-      <p id="leaderUpdate" class="leader-update" aria-live="polite"></p>
+        </section>
+      </div>
 
       <section class="chart-card" aria-labelledby="chartTitle">
         <div class="chart-heading">
           <div>
-            <p class="eyebrow">All 24 hours</p>
-            <h2 id="chartTitle">Injuries and injury rate by crash hour</h2>
+            <p class="chart-overline">All 24 hours</p>
+            <h2 id="chartTitle">The daily pattern</h2>
           </div>
-          <p class="chart-hint">Hover over a bar to see its exact value.</p>
+          <p class="chart-hint">
+            Blue shows total injuries. Red shows injuries per 100 crashes.
+            Hover for exact values.
+          </p>
         </div>
 
         <div class="chart-container">
           <canvas
             id="injuryChart"
-            aria-label="Grouped bar chart comparing total injuries and injury rate for every hour"
+            aria-label="Grouped bar chart comparing total injuries and injuries per 100 crashes for every hour"
             role="img"
           ></canvas>
         </div>
       </section>
 
+      <section class="insight-block" aria-labelledby="insightHeadline">
+        <p class="beat-label beat-label--light">04 · Insight</p>
+        <h2 id="insightHeadline">Loading the latest comparison…</h2>
+        <p class="insight-intro">
+          The busiest injury hour and the highest-rate hour are not the same.
+        </p>
+
+        <div class="summary-grid" aria-label="Leading hours">
+          <article class="metric-card">
+            <p class="metric-label">Highest total injuries</p>
+            <p id="totalInjuriesHour" class="metric-value">—</p>
+            <p id="totalInjuriesDetail" class="metric-detail">
+              Waiting for live data
+            </p>
+          </article>
+
+          <p class="comparison-word" aria-hidden="true">but</p>
+
+          <article class="metric-card">
+            <p class="metric-label">Highest injuries per 100 crashes</p>
+            <p id="injuryRateHour" class="metric-value">—</p>
+            <p id="injuryRateDetail" class="metric-detail">
+              Waiting for live data
+            </p>
+          </article>
+        </div>
+
+        <p id="leaderUpdate" class="leader-update" aria-live="polite"></p>
+      </section>
+
+      <section class="so-what" aria-labelledby="soWhatHeading">
+        <p class="beat-label">05 · So what?</p>
+        <div>
+          <h2 id="soWhatHeading">Safety planning needs both sides of the story.</h2>
+          <p>
+            City planners and traffic safety teams should not focus only on
+            when the most injuries happen. They should also consider when
+            crashes produce more injuries per 100 crashes when deciding where
+            and when to focus safety efforts.
+          </p>
+        </div>
+      </section>
+
       <aside class="methodology" aria-labelledby="methodologyTitle">
-        <h2 id="methodologyTitle">Methodology</h2>
+        <h2 id="methodologyTitle">A quick note about the rate</h2>
         <p>
-          Injury rate = (total people injured ÷ number of crashes) × 100.
-          To avoid highlighting a rate based on very little data, an hour must
-          have at least 20 crashes to qualify as the highest-rate hour. The API
-          supplies the latest 5,000 records ordered by crash date and time.
+          Injuries per 100 crashes = total people injured ÷ number of crashes ×
+          100. An hour needs at least 20 crashes to qualify as the highest-rate
+          hour, so a very small group does not become the headline.
         </p>
       </aside>
     </main>
