@@ -1,30 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NYC Collision Injury Insight</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+      name="description"
+      content="Explore how total injuries and injury rates vary by crash hour in recent NYC collision data."
+    >
+    <title>NYC Collision Injury Insight</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    <script src="script.js" defer></script>
+  </head>
 
-<body>
-  <main>
-    <h1>NYC Collision Injuries by Hour</h1>
+  <body>
+    <main class="page-shell">
+      <header class="hero">
+        <p class="eyebrow">NYC Open Data Explorer</p>
+        <h1>When are collision injuries most severe?</h1>
+        <p class="intro">
+          Compare the hour with the most total injuries to the hour with the
+          highest number of injuries per 100 crashes.
+        </p>
+      </header>
 
-    <p>
-      The hour with the most total injuries may not be the hour with the
-      highest injury rate.
-    </p>
+      <section class="controls" aria-label="Data controls">
+        <div>
+          <p id="status" class="status" role="status" aria-live="polite">
+            Loading live data...
+          </p>
+          <p class="data-details">
+            <span id="recordCount">Records returned: —</span>
+            <span id="lastUpdated">Last fetched: —</span>
+          </p>
+        </div>
+        <button id="refreshButton" type="button">Refresh Live Data</button>
+      </section>
 
-    <p id="status">Loading collision data...</p>
+      <section class="summary-grid" aria-label="Leading hours">
+        <article class="metric-card metric-card--total">
+          <p class="metric-label">Highest total injuries</p>
+          <p id="totalInjuriesHour" class="metric-value">—</p>
+          <p id="totalInjuriesDetail" class="metric-detail">
+            Waiting for live data
+          </p>
+        </article>
 
-    <section id="summary"></section>
+        <article class="metric-card metric-card--rate">
+          <p class="metric-label">Highest injury rate</p>
+          <p id="injuryRateHour" class="metric-value">—</p>
+          <p id="injuryRateDetail" class="metric-detail">
+            Waiting for live data
+          </p>
+        </article>
+      </section>
 
-    <section>
-      <canvas id="injuryChart"></canvas>
-    </section>
-  </main>
+      <p id="leaderUpdate" class="leader-update" aria-live="polite"></p>
 
-  <script src="script.js"></script>
-</body>
+      <section class="chart-card" aria-labelledby="chartTitle">
+        <div class="chart-heading">
+          <div>
+            <p class="eyebrow">All 24 hours</p>
+            <h2 id="chartTitle">Injuries and injury rate by crash hour</h2>
+          </div>
+          <p class="chart-hint">Hover over a bar to see its exact value.</p>
+        </div>
+
+        <div class="chart-container">
+          <canvas
+            id="injuryChart"
+            aria-label="Grouped bar chart comparing total injuries and injury rate for every hour"
+            role="img"
+          ></canvas>
+        </div>
+      </section>
+
+      <aside class="methodology" aria-labelledby="methodologyTitle">
+        <h2 id="methodologyTitle">Methodology</h2>
+        <p>
+          Injury rate = (total people injured ÷ number of crashes) × 100.
+          To avoid highlighting a rate based on very little data, an hour must
+          have at least 20 crashes to qualify as the highest-rate hour. The API
+          supplies the latest 5,000 records ordered by crash date and time.
+        </p>
+      </aside>
+    </main>
+  </body>
 </html>
