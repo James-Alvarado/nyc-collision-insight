@@ -286,18 +286,6 @@ button:disabled {
   letter-spacing: -0.055em;
 }
 
-.demo-badge {
-  flex: 0 0 auto;
-  margin-bottom: 0;
-  padding: 6px 10px;
-  border: 1px solid #b9cbe0;
-  border-radius: 999px;
-  color: var(--blue);
-  background: #ffffff;
-  font-size: 0.72rem;
-  font-weight: 800;
-}
-
 .auto-insight-context {
   max-width: 790px;
   margin: 20px 0 24px;
@@ -448,7 +436,4 @@ button:disabled {
     min-height: 0;
   }
 
-  .demo-badge {
-    align-self: flex-start;
-  }
 }
